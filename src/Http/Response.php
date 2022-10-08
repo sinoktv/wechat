@@ -1,7 +1,7 @@
 <?php
 
 namespace WeWork\Http;
-
+use think\facade\Config;
 class Response extends \GuzzleHttp\Psr7\Response
 {
     /**
@@ -12,10 +12,11 @@ class Response extends \GuzzleHttp\Psr7\Response
         $stream = parent::getBody();
 
         $data = json_decode((string)$stream, true);
-
-        if (JSON_ERROR_NONE === json_last_error() && $data['errcode'] !== 0) {
-            throw new \InvalidArgumentException($data['errmsg'], $data['errcode']);
-        }
+		/*if (Config::get('weixin.log')['level'] == 'debug'){
+			if (JSON_ERROR_NONE === json_last_error() && $data['errcode'] !== 0) {
+				throw new \InvalidArgumentException($data['errmsg'], $data['errcode']);
+			}
+		}*/
 
         return $stream;
     }

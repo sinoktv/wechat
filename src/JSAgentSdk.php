@@ -4,42 +4,31 @@ namespace WeWork;
 
 use WeWork\Crypt\PrpCrypt;
 use WeWork\Traits\CorpIdTrait;
-use WeWork\Traits\JsApiTicketTrait;
+use WeWork\Traits\JsAgentTicketTrait;
 use WeWork\Traits\TicketTrait;
+use WeWork\Traits\AgentIdTrait;
 
-class JSSdk
+class JSAgentSdk
 {
-    use CorpIdTrait, JsApiTicketTrait, TicketTrait;
+    use CorpIdTrait,AgentIdTrait, TicketTrait, JsAgentTicketTrait;
 
     /**
      * @param string $url
      * @return array
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getConfig(string $url): array
+	public function getJsAgentConfig(string $url): array
     {
         $appId = $this->corpId;
-
-        $timestamp = $this->getTimestamp();
-
-        $nonceStr = $this->getNonceStr();
-
-        $signature = sha1("jsapi_ticket={$this->jsApiTicket->get()}&noncestr={$nonceStr}&timestamp={$timestamp}&url={$url}");
-
-        return compact('appId', 'timestamp', 'nonceStr', 'signature');
-    }
-/*	public function getJsAgentConfig(string $url): array
-    {
-        $appId = $this->corpId;
-
+		$agent_id = $this->agentId;
         $timestamp = $this->getTimestamp();
 
         $nonceStr = $this->getNonceStr();
 
         $signature = sha1("jsapi_ticket={$this->jsAgentTicket->get()}&noncestr={$nonceStr}&timestamp={$timestamp}&url={$url}");
 
-        return compact('appId', 'timestamp', 'nonceStr', 'signature');
-    }*/
+        return compact('appId', 'timestamp', 'nonceStr', 'signature','agent_id');
+    }
     /**
      * @return array
      * @throws \Psr\SimpleCache\InvalidArgumentException

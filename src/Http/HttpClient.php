@@ -39,6 +39,16 @@ class HttpClient implements HttpClientInterface
     {
         return $this->client->get($uri, compact('query'))->getBody();
     }
+	public function getMessageObject(string $uri, array $query = []): object
+    {
+        $file = $this->client->get($uri, compact('query'));
+		return $file;
+		return array(
+			'Body'=>$file->getBody(),
+			'Headers'=>$file->getHeaders(),
+		);
+		//return $this->client->get($uri, compact('query'))->getBody();
+    }
 
     /**
      * @param string $uri
@@ -59,11 +69,14 @@ class HttpClient implements HttpClientInterface
      */
     public function postFile(string $uri, string $path, array $query = []): array
     {
+		$headers = [];
+		
         return $this->client->post($uri, array_merge([
             'multipart' => [
                 [
                     'name' => 'media',
-                    'contents' => fopen($path, 'r')
+                    'contents' => fopen($path, 'r'),
+					//'headers' => $headers
                 ]
             ]
         ], compact('query')))->toArray();

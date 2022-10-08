@@ -10,10 +10,12 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+//use Symfony\Component\Cache\Adapter\FilesystemAdapter as FilesystemCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use WeWork\ApiCache\JsApiTicket;
+use WeWork\ApiCache\JsAgentTicket;
 use WeWork\ApiCache\Ticket;
 use WeWork\ApiCache\Token;
 use WeWork\Crypt\WXBizMsgCrypt;
@@ -44,6 +46,9 @@ class App extends ContainerBuilder
         'message'    => Api\Message::class,
         'tag'        => Api\Tag::class,
         'user'       => Api\User::class,
+        'kf'       => Api\Kf::class,
+        'clientin'       => Api\ClientIn::class,
+        'general'       => Api\General::class,
     ];
 
     /**
@@ -77,6 +82,8 @@ class App extends ContainerBuilder
         $this->registerJsApiTicket();
         $this->registerTicket();
         $this->registerJssdk();
+        $this->registerJsAgentTicket();
+		$this->registerJsAgentsdk();
     }
 
     /**
@@ -206,6 +213,14 @@ class App extends ContainerBuilder
             ->addMethodCall('setCache', [new Reference('cache')])
             ->addMethodCall('setHttpClient', [new Reference('http_client_with_token')]);
     }
+	private function registerJsAgentTicket(): void
+    {
+        $this->register('jsAgentTicket', JsAgentTicket::class)
+            //->addMethodCall('setAgentId', [$this->config->get('agent_id')])
+			->addMethodCall('setSecret', [$this->config->get('secret')])
+			->addMethodCall('setCache', [new Reference('cache')])
+            ->addMethodCall('setHttpClient', [new Reference('http_client_with_token')]);
+    }
 
     /**
      * @return void
@@ -216,7 +231,7 @@ class App extends ContainerBuilder
             ->addMethodCall('setCache', [new Reference('cache')])
             ->addMethodCall('setHttpClient', [new Reference('http_client_with_token')]);
     }
-
+	
     /**
      * @return void
      */
@@ -226,5 +241,14 @@ class App extends ContainerBuilder
             ->addMethodCall('setCorpId', [$this->config->get('corp_id')])
             ->addMethodCall('setJsApiTicket', [new Reference('jsApiTicket')])
             ->addMethodCall('setTicket', [new Reference('ticket')]);
+    }
+	private function registerJsAgentsdk(): void
+    {
+        $this->register('jsAgentSdk', JSAgentSdk::class)
+            ->addMethodCall('setAgentId', [$this->config->get('agent_id')])
+			->addMethodCall('setCorpId', [$this->config->get('corp_id')])
+			->addMethodCall('setTicket', [new Reference('ticket')])
+            ->addMethodCall('setJsAgentTicket', [new Reference('jsAgentTicket')])
+            ;
     }
 }

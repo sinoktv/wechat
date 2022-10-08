@@ -31,7 +31,12 @@ abstract class AbstractApiCache
 
         if ($refresh || !$value) {
             $value = $this->getFromServer();
-            $this->cache->set($key, $value, 7100);
+			//$value_token = $value['access_token'];
+			//$value_expires_in = $value['expires_in'];
+			//$this->cache->set($key, $value_token, $value_expires_in);
+			$value_expires_in = $this->token_expires_in;
+            $this->cache->set($key, $value, $value_expires_in);
+			//$this->cache->set($key, $value, 7100);
         }
 
         return $value;

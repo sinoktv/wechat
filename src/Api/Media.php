@@ -18,7 +18,10 @@ class Media
      */
     public function upload(string $type, string $path): array
     {
-        return $this->httpClient->postFile('media/upload', $path, compact('type'));
+		//var_dump($path);
+		$types = compact('type');
+		//var_dump($types);die();
+        return $this->httpClient->postFile('media/upload', $path, $types);
     }
 
     /**
@@ -31,6 +34,12 @@ class Media
     {
         return $this->httpClient->getStream('media/get', ['media_id' => $id]);
     }
+	public function getMessageObject(string $id): object
+    {
+        return $this->httpClient->getMessageObject('media/get', ['media_id' => $id]);
+		//'Body'=>$file->getBody(),
+		//'Headers'=>$file->getHeaders(),
+    }
 
     /**
      * 获取高清语音素材
@@ -42,7 +51,12 @@ class Media
     {
         return $this->httpClient->getStream('media/get/jssdk', ['media_id' => $id]);
     }
-
+	public function getVoiceObject(string $id): object
+    {
+        return $this->httpClient->getMessageObject('media/get/jssdk', ['media_id' => $id]);
+		//'Body'=>$file->getBody(),
+		//'Headers'=>$file->getHeaders(),
+    }
     /**
      * 上传图片
      *
