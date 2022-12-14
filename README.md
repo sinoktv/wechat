@@ -18,9 +18,9 @@
 ## Installation
 
 ```bash
-composer require pithyone/wechat
+composer require sinoktv/wechat
 ```
 
 ## License
 
-[MIT](https://github.com/pithyone/wechat/blob/master/LICENSE)
+[MIT](https://github.com/sinoktv/wechat/blob/master/LICENSE)
