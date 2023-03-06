@@ -61,7 +61,7 @@ class AppChat
 	//获取客户列表  企业可通过此接口获取指定成员添加的客户列表
 	public function externalcontactList(string $userid=''): array
     {
-        return $this->httpClient->postJson('externalcontact/list', array(
+		return $this->httpClient->get('externalcontact/list', array(
 			'userid'=>$userid,
 		));
     }
@@ -70,7 +70,7 @@ class AppChat
 	//企业需要使用系统应用“客户联系”或配置到“可调用应用”列表中的自建应用的secret所获取的accesstoken来调用（accesstoken如何获取？）；
 	public function externalcontactGet(string $external_userid='',string $cursor=''): array
     {
-        return $this->httpClient->postJson('externalcontact/get', array(
+		return $this->httpClient->get('externalcontact/get', array(
 			'external_userid'=>$external_userid,
 			'cursor'=>$cursor,
 		));
